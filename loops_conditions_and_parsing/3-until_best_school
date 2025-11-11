@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Uses until instead of while
 i=0
-until ((i=10))
+until (( i==10 ))
 do
 echo "Best School"
 i=$i+1
