@@ -1,0 +1,3 @@
+#!/bin/bash
+git config --global user.name "Nihat Mammadzada"
+git config --global user.email "nihat.mmzade@gmail.com"
