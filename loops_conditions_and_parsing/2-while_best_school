@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Uses while loop
 n=0
 while (( n < 10 ))
 do
