@@ -2,4 +2,4 @@
 #This is just a comment
 
 file="apache-access.log"
-awk '{print $1}' $file
+awk '{print $1, $2}' $file
