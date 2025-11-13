@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 #This is just a comment
-output="ps -aux"
+output="ps auxf"
 
 echo $output
