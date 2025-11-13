@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
 #This is just a comment
 
-file="apache-access.log"
-awk '{print $10, $1, $9}' $file > logs.txt
-sort -n logs.txt
+awk '{print $1, $9}' apache-access.log | sort | uniq -c | sort -nr
