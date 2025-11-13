@@ -2,4 +2,5 @@
 #This is just a comment
 
 file="apache-access.log"
-awk '{print $1, $9, $10}' $file
+awk '{print $10, $1, $9}' $file > logs.txt
+sort -n logs.txt
