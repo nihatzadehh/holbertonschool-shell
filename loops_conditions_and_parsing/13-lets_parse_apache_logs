@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 #This is just a comment
 
-awk '{print $1}' apache-access.log
+file="apache-access.log"
+awk '{print $1}' $file
