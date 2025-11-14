@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+APP_NAME="my_daemon"
+PID_FILE="/var/run/${APP_NAME}.pid"
+EXEC_PATH="./manage_my_process"
+
+fnc_start() {
+    if ! [ -x "$EXEC_PATH" ]; then
+        echo "Hata: Çalıştırılabilir dosya bulunamadı: $EXEC_PATH" >&2
+        return 1
+    fi
+    
+    "$EXEC_PATH" &
+    local process_id=$!
+    echo "$process_id" > "$PID_FILE"
+    echo "$APP_NAME başlatıldı (PID: $process_id)"
+}
+
+fnc_stop() {
+    if [ -f "$PID_FILE" ]; then
+        local target_pid
+        target_pid=$(cat "$PID_FILE")
+        
+        kill "$target_pid" 2>/dev/null
+        
+        rm -f "$PID_FILE"
+        echo "$APP_NAME durduruldu"
+    else
+        echo "$APP_NAME zaten çalışmıyor veya PID dosyası ($PID_FILE) mevcut değil."
+    fi
+}
+
+fnc_restart() {
+    fnc_stop
+    sleep 1 
+    fnc_start
+    echo "$APP_NAME yeniden başlatma tamamlandı."
+}
+
+case "$1" in
+    start)
+        fnc_start
+        ;;
+    stop)
+        fnc_stop
+        ;;
+    restart)
+        fnc_restart
+        ;;
+    *)
+        echo "Kullanım: $0 {start|stop|restart}"
+        exit 1
+        ;;
+esac
+
+exit 0
