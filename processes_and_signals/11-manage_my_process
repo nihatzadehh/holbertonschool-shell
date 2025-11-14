@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+#Just
 APP_NAME="my_daemon"
 PID_FILE="/var/run/${APP_NAME}.pid"
 EXEC_PATH="./manage_my_process"
