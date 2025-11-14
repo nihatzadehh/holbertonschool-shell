@@ -5,7 +5,7 @@ for pid in /proc/[0-9]*; do
 	if [ -r "$pid/comm" ]; then
 		name=$(cat "$pid/comm")
 		if echo "$name" | grep -qi "bash"; then
-			echo "$( pidof $name ) $name"
+			echo "$(basename "$pid") $name"
 		fi
 	fi
 done
