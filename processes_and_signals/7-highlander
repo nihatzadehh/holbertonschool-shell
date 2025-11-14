@@ -2,6 +2,6 @@
 #Just a comment
 while true;do
 	echo "To infinity and beyond"
-	trap 'echo "Killed"' SIGTERM
+	trap 'echo "Killed" && kill' SIGTERM
 	sleep 2
 done
