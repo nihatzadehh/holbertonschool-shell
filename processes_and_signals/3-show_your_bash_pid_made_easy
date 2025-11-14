@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#Just a comment
+
+for pid in /proc/[0-9]*; do
+	if [ -r "$pid/comm" ]; then
+		name=$(cat "$pid/comm")
+		if echo "$name" | grep -qi "bash"; then
+			echo "$( pidof $name ) $name"
+		fi
+	fi
+done
