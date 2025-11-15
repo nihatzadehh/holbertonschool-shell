@@ -1,56 +1,33 @@
 #!/usr/bin/env bash
-#Just
-APP_NAME="my_daemon"
-PID_FILE="/var/run/${APP_NAME}.pid"
-EXEC_PATH="./manage_my_process"
+# This task doesn't work
 
-fnc_start() {
-    if ! [ -x "$EXEC_PATH" ]; then
-        echo "Hata: Çalıştırılabilir dosya bulunamadı: $EXEC_PATH" >&2
-        return 1
-    fi
-    
-    "$EXEC_PATH" &
-    local process_id=$!
-    echo "$process_id" > "$PID_FILE"
-    echo "$APP_NAME başlatıldı (PID: $process_id)"
-}
-
-fnc_stop() {
-    if [ -f "$PID_FILE" ]; then
-        local target_pid
-        target_pid=$(cat "$PID_FILE")
-        
-        kill "$target_pid" 2>/dev/null
-        
-        rm -f "$PID_FILE"
-        echo "$APP_NAME durduruldu"
-    else
-        echo "$APP_NAME zaten çalışmıyor veya PID dosyası ($PID_FILE) mevcut değil."
-    fi
-}
-
-fnc_restart() {
-    fnc_stop
-    sleep 1 
-    fnc_start
-    echo "$APP_NAME yeniden başlatma tamamlandı."
-}
+PID_FILE="/tmp/my_process.pid"
+SCRIPT_DIR="$(dirname "$0")"
 
 case "$1" in
     start)
-        fnc_start
+        "$SCRIPT_DIR/manage_my_process" &
+        echo "$!" > "$PID_FILE"
+        echo "manage_my_process started"
         ;;
     stop)
-        fnc_stop
+        if [ -f "$PID_FILE" ]; then
+            kill "$(< "$PID_FILE")" 2>/dev/null
+            rm -f "$PID_FILE"
+        fi
+        echo "manage_my_process stopped"
         ;;
     restart)
-        fnc_restart
+        if [ -f "$PID_FILE" ]; then
+            kill "$(< "$PID_FILE")" 2>/dev/null
+            rm -f "$PID_FILE"
+        fi
+        "$SCRIPT_DIR/manage_my_process" &
+        echo "$!" > "$PID_FILE"
+        echo "manage_my_process restarted"
         ;;
     *)
-        echo "Kullanım: $0 {start|stop|restart}"
+        echo "Usage: manage_my_process {start|stop|restart}"
         exit 1
         ;;
 esac
-
-exit 0
