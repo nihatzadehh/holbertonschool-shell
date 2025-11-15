@@ -1,3 +1,2 @@
 #!/bin/bash
-#Just a comment
 printf "%.2f\n" "$NUM"
