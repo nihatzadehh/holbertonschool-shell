@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-#Just a comment
-PID="/var/run/myscript.pid"
-echo $$ > /var/run/myscript.pid
-trap 'echo "I hate the kill command"' SIGTERM
-trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm -f "$PID"; exit' SIGQUIT
+# Just a comment
+PATH_PID="/var/run/myscript.pid"
+trap 'echo I hate the kill command; rm -rf $PATH_PID; exit' SIGTERM
+trap "echo Y U no love me?!" SIGINT
+trap 'rm -rf $PATH_PID; exit' SIGQUIT
+pgrep -f "./10-process_and_pid_file" > "$PATH_PID"
 while true; do
-  echo "To infinity and beyond"
-  sleep 2
+echo "To infinity and beyond"
+sleep 1
 done
