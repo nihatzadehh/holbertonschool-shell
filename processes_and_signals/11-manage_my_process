@@ -1,33 +1,35 @@
 #!/usr/bin/env bash
-# This task doesn't work
-
-PID_FILE="/tmp/my_process.pid"
-SCRIPT_DIR="$(dirname "$0")"
+# This task has a problem
+PROCESS="./manage_my_process"
+PID_FILE="/var/run/my_process.pid"
+PID_FILE_TEMP="/tmp/my_process.pid"
 
 case "$1" in
-    start)
-        "$SCRIPT_DIR/manage_my_process" &
-        echo "$!" > "$PID_FILE"
-        echo "manage_my_process started"
-        ;;
-    stop)
-        if [ -f "$PID_FILE" ]; then
-            kill "$(< "$PID_FILE")" 2>/dev/null
-            rm -f "$PID_FILE"
-        fi
-        echo "manage_my_process stopped"
-        ;;
-    restart)
-        if [ -f "$PID_FILE" ]; then
-            kill "$(< "$PID_FILE")" 2>/dev/null
-            rm -f "$PID_FILE"
-        fi
-        "$SCRIPT_DIR/manage_my_process" &
-        echo "$!" > "$PID_FILE"
-        echo "manage_my_process restarted"
-        ;;
-    *)
-        echo "Usage: manage_my_process {start|stop|restart}"
-        exit 1
-        ;;
+  start)
+    if [ -f "$PID_FILE" ]; then
+       echo "Proccess is already running"
+    fi
+
+    $PROCESS &
+    echo $! > "$PID_FILE_TEMP"
+    mv "$PID_FILE_TEMP" "$PID_FILE"
+    echo "manage_my_process started"
+  ;;
+  stop)
+    kill "$(cat $PID_FILE)"
+    rm -f "$PID_FILE"
+    echo "manage_my_process stopped"
+  ;;
+  restart)
+    kill "$(cat $PID_FILE)"
+    mv "$PID_FILE" "$PID_FILE_TEMP"
+    echo "manage_my_process restarted"
+    sleep 1
+    $PROCESS &
+    echo $! > "$PID_FILE_TEMP"
+    mv "$PID_FILE_TEMP" "$PID_FILE"
+  ;;
+  *)
+    echo "Usage: manage_my_process {start|stop|restart}"
+  ;;
 esac
